@@ -7,7 +7,7 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
 ----------------------------------------------------------------------------
 
-**wifi**
+**wifi** 
 ----------------------------------------------------------------------------
   * prototype communication arduino over wifi
   * currently posts to thing speak (user bgravelle pass Manito@2)
