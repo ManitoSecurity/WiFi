@@ -10,21 +10,25 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 **wifi**
 ----------------------------------------------------------------------------
   * prototype communication arduino over wifi
-  * currently send HTTP GET to example.com
+  * currently posts to thing speak (user bgravelle pass Manito@2)
 
   **TO DO**
-  * make it actually do something useful
+  * make it loop
+  * incorporate BT and IR
 
   **Known Problems**
+  * only posts once
   * trouble with WEP security
 
   **Versions**
 
+  *wifi_v1_1*
+   * added thing speak posting
+   * pings api.thingspeak.com first to check WiFi issues
+
   *wifi_v1*
    * initial prototype
-   * indicates "detection" when IR sensor picks up movement
-   * also checks connection with phone
-   * functions to send BT commands and recieve response
+   * sends HTTP GET to example.com
 
 ----------------------------------------------------------------------------
 

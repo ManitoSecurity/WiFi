@@ -54,7 +54,7 @@ unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
 char server[] = "api.thingspeak.com";     // thingspeak site
 char api_key[] = "F96YKEJ0K0WYTNRI";      // thingspeak api key
-int tsWaitTime= 30000;                    // thinkspeak update interval
+int tsWaitTime= 10000;                    // thinkspeak update interval
 
 // Global Variables
 SFE_CC3000 wifi = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
@@ -66,7 +66,9 @@ char* postString; // string to post to thing speak
 void setup() {
   
   ConnectionInfo connection_info;
-  int i;
+  int i;  
+  IPAddress remote_ip;
+  PingReport ping_report = {0};
   
   // Initialize Serial port
   Serial.begin(115200);
@@ -111,6 +113,53 @@ void setup() {
     }
     Serial.println();
   }  
+  
+  Serial.println("\n PINGING thingSpeak \n");
+
+  // Perform a DNS lookup to get the IP address of a host
+  Serial.print("Looking up IP address of: ");
+  Serial.println(server);
+  if ( !wifi.dnsLookup(server, &remote_ip) ) {
+    Serial.println("Error: Could not lookup host by name");
+  } else {
+    Serial.print("IP address found: ");
+    for (i = 0; i < IP_ADDR_LEN; i++) {
+      Serial.print(remote_ip[i], DEC);
+      if ( i < IP_ADDR_LEN - 1 ) {
+        Serial.print(".");
+      }
+    }
+    Serial.println();
+  }
+  
+  // Ping IP address of remote host
+  Serial.print("Pinging ");
+  for (i = 0; i < IP_ADDR_LEN; i++) {
+    Serial.print(remote_ip[i], DEC);
+    if ( i < IP_ADDR_LEN - 1 ) {
+      Serial.print(".");
+    }
+  }
+  Serial.print(" ");
+  Serial.print(3, DEC);
+  Serial.println(" times...");
+  if ( !wifi.ping(remote_ip, ping_report, 3, 56, 1000) ) {
+    Serial.println("Error: no ping response");
+  } else {
+    Serial.println("Pong!");
+    Serial.println();
+    Serial.print("Packets sent: ");
+    Serial.println(ping_report.packets_sent);
+    Serial.print("Packets received: ");
+    Serial.println(ping_report.packets_received);
+    Serial.print("Min round time (ms): ");
+    Serial.println(ping_report.min_round_time);
+    Serial.print("Max round time (ms): ");
+    Serial.println(ping_report.max_round_time);
+    Serial.print("Avg round time (ms): ");
+    Serial.println(ping_report.avg_round_time);
+    Serial.println();
+  }
 
 }
 
@@ -118,7 +167,7 @@ void updateTS(){
   
   client.print("POST /update HTTP/1.1\n");
   client.print("Host: api.thingspeak.com\n");
-  client.print("Connection: close\n");
+  client.print("Connection: keep-alive\n");
   client.print("X-THINGSPEAKAPIKEY: ");
   client.print(api_key);
   client.print("\n");
@@ -126,7 +175,7 @@ void updateTS(){
   client.print("Content-Length: ");
   client.print(strlen(postString));
   client.print("\n\n");
-  client.print(postString);
+  client.print("field1=2&field2=2");
   client.print("\n");
   delay(tsWaitTime);
   
@@ -140,12 +189,17 @@ void loop() {
     Serial.print(c);
   }
   
-  Serial.println("Posting...");
-  
-  postString = "field1=2&field2=2&status=(140 Character Message)";
-  updateTS();
-  postString = "field1=0&field2=0&status=(140 Character Message)";
-  updateTS();
+  Serial.print("Posting to ");
+  Serial.println(server);
+  if ( !client.connect(server, 80) ) {
+    Serial.println("Error: Could not make a TCP connection");
+  }
+  else{
+    postString = "field1=2&field2=2";
+    updateTS();
+    postString = "field1=0&field2=0";
+    updateTS();
+  }
   
   // If the server has disconnected, stop the client and wifi
   if ( !client.connected() ) {
