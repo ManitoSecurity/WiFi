@@ -13,14 +13,20 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   * currently posts to thing speak (user bgravelle pass Manito@2)
 
   **TO DO**
-  * make it loop
+  * make it useful
+  * make code pretty
   * incorporate BT and IR
 
   **Known Problems**
-  * only posts once
   * trouble with WEP security
 
   **Versions**
+
+  *wifi_v1_2*
+   * working (not useful but working)
+   * successful posting to thingspeak
+   * just switches between 2 values
+   * fun fact: I think there is a minimum delay between posts
 
   *wifi_v1_1*
    * added thing speak posting
