@@ -13,14 +13,20 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   * currently posts to thing speak (user bgravelle pass Manito@2)
 
   **TO DO**
-  * make it useful
+  * reinitiate connection to TS for each post
   * make code pretty
-  * incorporate BT and IR
+  * incorporate BT
 
   **Known Problems**
+  * difficultly maintaining connection to TS
   * trouble with WEP security
 
   **Versions**
+
+  *wifi_v1_3*
+   * not working
+   * gets input from IR and attempt to appropriately post
+   * only posts once; cannot maintain connection
 
   *wifi_v1_2*
    * working (not useful but working)
