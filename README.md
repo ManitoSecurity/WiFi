@@ -13,12 +13,13 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   * currently posts to thing speak (user bgravelle pass Manito@2)
 
   **TO DO**
-  * reinitiate connection to TS for each post
+  * fix posting issue
+  * find useful way to get info to app
   * make code pretty
   * incorporate BT
 
   **Known Problems**
-  * difficultly maintaining connection to TS
+  * difficultly posting (appears to send message but TS doesn't get it)
   * trouble with WEP security
 
   **Versions**
@@ -26,7 +27,7 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   *wifi_v1_3*
    * not working
    * gets input from IR and attempt to appropriately post
-   * only posts once; cannot maintain connection
+   * claims to post but TS doesn't agree
 
   *wifi_v1_2*
    * working (not useful but working)

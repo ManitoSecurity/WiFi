@@ -153,25 +153,35 @@ void setup() {
 
 void updateTS(){  
   
-  Serial.print("Posting to ");
-  Serial.println(server);
+  if ( client.connect(server, 80) ) {
+    Serial.print("Posting to ");
+    Serial.println(server);
   
-  client.print("POST /update HTTP/1.1\n");
-  client.print("Host: api.thingspeak.com\n");
-  client.print("Connection: keep-alive\n");
-  client.print("X-THINGSPEAKAPIKEY: " + api_key + "\n");
-  client.print("Content-Type: application/x-www-form-urlencoded\n");
-  client.print("Content-Length: " + (String)postString.length() + "\n\n");
-  client.print(postString);
-  client.print("\n");
+    client.print("POST /update HTTP/1.1\n");
+    client.print("Host: api.thingspeak.com\n");
+    client.print("Connection: close\n");
+    client.print("X-THINGSPEAKAPIKEY: " + api_key + "\n");
+    client.print("Content-Type: application/x-www-form-urlencoded\n");
+    client.print("Content-Length: " + (String)postString.length() + "\n\n");
+    client.print(postString);
+    client.print("\n");
+    
+  }else{
+    Serial.println();
+    Serial.println("Error: Failed to Connect");
+  }
+  
+  // Close socket
+  if ( !client.close() ) {
+    Serial.println("Error: Could not close socket");
+  }
+  
   delay(tsWaitTime);
   
 } //end updateTS
 
 void loop() {
   
-  if ( client.connected() ) {
-    
     digiIRout = digitalRead(IRPin);
     prev_alarm = curr_alarm;
     
@@ -183,28 +193,8 @@ void loop() {
       curr_alarm = 1;
     }
     
-    //if(curr_alarm == prev_alarm){
+    if(curr_alarm != prev_alarm){
      updateTS();
-    //}
-    
-  }else{
-    Serial.println();
-    Serial.println("Connection Lost");
-    
-    // Close socket
-    if ( !client.close() ) {
-      Serial.println("Error: Could not close socket");
     }
-    
-    // Disconnect WiFi
-    if ( !wifi.disconnect() ) {
-      Serial.println("Error: Could not disconnect from network");
-    }
-    
-    // Do nothing
-    Serial.println("Finished WebClient test");
-    while(true){
-      delay(1000);
-    }
-  }
+  
 } // end loop
