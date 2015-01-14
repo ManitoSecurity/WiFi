@@ -3,12 +3,12 @@ wifi_v1_3.ino
 Manito Security Solutions
 Brian Gravelle
 Jan 8, 2015
-https://github.com/sparkfun/SFE_CC3000_Library
 
 Prototype for WiFi communication from Arduino
 
 many thanks to Shawn Hymel @ SparkFun Electronics for creating
   the CC3000 library
+  https://github.com/sparkfun/SFE_CC3000_Library
 
 The security mode is defined by one of the following:
 WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA, WLAN_SEC_WPA2
@@ -35,12 +35,17 @@ Development environment specifics:
 Written in Arduino 1.0.5
 Tested with Arduino UNO R3
 
+pub  5JZO9K83dRU0KlA39EGZ
+pri  7BMDzNyXeAf0Kl25JoW1
+url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
+
 ****************************************************************/
 
 #include <SPI.h>
 #include <SFE_CC3000.h>
 #include <SFE_CC3000_Client.h>
 #include <string.h>
+#include <Phant.h>
 
 // Pins
 #define CC3000_INT      2   // Needs to be an interrupt pin (D2/D3)
@@ -55,9 +60,12 @@ Tested with Arduino UNO R3
 // Constants
 unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
-char server[] = "api.thingspeak.com";     // thingspeak site
-String api_key = "F96YKEJ0K0WYTNRI";      // thingspeak api key
-int tsWaitTime= 30000;                    // thinkspeak update interval
+char server[] = "data.sparkfun.com";      // sparkfun data
+String pri_key = "7BMDzNyXeAf0Kl25JoW1";  // private key
+String pub_key = "5JZO9K83dRU0KlA39EGZ";  // public key
+int waitTime= 30000;                      // limit update interval
+
+Phant phant(server, pub_key, pri_key);
 
 // Global Variables
 SFE_CC3000 wifi = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
@@ -69,30 +77,21 @@ String postString;    // string to post to thing speak
 int digiIRout;        // reading from IR
 int curr_alarm;
 int prev_alarm;
+IPAddress remote_ip;
+ConnectionInfo connection_info;
 
 
-void setup() {
-  
-  ConnectionInfo connection_info;
-  int i;  
-  IPAddress remote_ip;
-  PingReport ping_report = {0};
-  
-  // Initialize Serial port
-  Serial.begin(115200);
-  Serial.println();
-  Serial.println("---------------------------");
-  Serial.println("      Manito WiFi v1.1     ");
-  Serial.println("---------------------------");
-  
-  pinMode(IRPin, INPUT);      
-    
-  // Initialize CC3000 (configure SPI communications)
+void initCC3000(){
+ 
   if ( wifi.init() ) {
     Serial.println("CC3000 initialization complete");
   } else {
     Serial.println("Something went wrong during CC3000 init!");
   }
+  
+}
+
+void getWiFiInfo(){
   
   Serial.setTimeout(10000);
   Serial.print("Enter SSID: ");
@@ -103,14 +102,19 @@ void setup() {
   delay(1000);
   Serial.println("\n");
   
-  // Connect using DHCP
+}
+
+void connectToWiFi(){
   Serial.print("Connecting to SSID: ");
   Serial.println(ap_ssid);
   if(!wifi.connect(ap_ssid, ap_security, ap_password, timeout)) {
     Serial.println("Error: Could not connect to AP");
   }
+}
+
+void showConnectionInfo(){
+  int i;
   
-  // Gather connection details and print IP address
   if ( !wifi.getConnectionInfo(connection_info) ) {
     Serial.println("Error: Could not obtain connection details");
   } else {
@@ -123,8 +127,11 @@ void setup() {
     }
     Serial.println();
   }  
+}
 
-  // Perform a DNS lookup to get the IP address of a host
+void lookupServerIP(){
+  int i;
+ 
   Serial.print("Looking up IP address of: ");
   Serial.println(server);
   if ( !wifi.dnsLookup(server, &remote_ip) ) {
@@ -139,46 +146,57 @@ void setup() {
     }
     Serial.println();
   }
+}
+
+void setup() {
   
-  if ( !client.connect(server, 80) ) {
-    Serial.println("Error: Could not make a TCP connection");
-  }
+  // Initialize Serial port
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println("---------------------------");
+  Serial.println("        Manito WiFi        ");
+  Serial.println("---------------------------");
   
-  curr_alarm = 0;
+  pinMode(IRPin, INPUT);      
+    
+  initCC3000();  
+  getWiFiInfo();  
+  connectToWiFi();
+  showConnectionInfo();
+  lookupServerIP();
+  
+  curr_alarm = 1;
   prev_alarm = 0;
-  postString = "field1=0&field2=0";
-  updateTS();
 
 } //end setup
 
-void updateTS(){  
+void setDisarmPost(){
+  phant.add("armed",false);
+  phant.add("alert",false); 
+}
+
+void setArmPost(){
+  phant.add("armed",true);
+}
+
+void setAlertPost(){
+  phant.add("alert",true);
+}
+
+void setShutUpPost(){
+  phant.add("alert",true);
+}
+
+void updateServer(){  
   
-  if ( client.connect(server, 80) ) {
-    Serial.print("Posting to ");
-    Serial.println(server);
+  Serial.print("Posting to ");
+  Serial.println(server);
   
-    client.print("POST /update HTTP/1.1\n");
-    client.print("Host: api.thingspeak.com\n");
-    client.print("Connection: close\n");
-    client.print("X-THINGSPEAKAPIKEY: " + api_key + "\n");
-    client.print("Content-Type: application/x-www-form-urlencoded\n");
-    client.print("Content-Length: " + (String)postString.length() + "\n\n");
-    client.print(postString);
-    client.print("\n");
-    
-  }else{
-    Serial.println();
-    Serial.println("Error: Failed to Connect");
-  }
+  phant.post();
   
-  // Close socket
-  if ( !client.close() ) {
-    Serial.println("Error: Could not close socket");
-  }
+  delay(waitTime);
   
-  delay(tsWaitTime);
-  
-} //end updateTS
+} //end updateServer
 
 void loop() {
   
@@ -186,15 +204,15 @@ void loop() {
     prev_alarm = curr_alarm;
     
     if(digiIRout == LOW) { 
-      postString = "field1=2&field2=2";
+      setAlertPost();
       curr_alarm = 2;
     } else {
-      postString = "field1=1&field2=1";
+      setShutUpPost();
       curr_alarm = 1;
     }
     
     if(curr_alarm != prev_alarm){
-     updateTS();
+     updateServer();
     }
   
 } // end loop
