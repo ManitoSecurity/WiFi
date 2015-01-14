@@ -20,7 +20,7 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   **Known Problems**
   * difficultly posting (appears to send message but TS doesn't get it)
-  * trouble with WEP security
+  * trouble with WEP security- might have to send key as hex (see wlan.h in WiFi library's utility)
 
   **Versions**
 
