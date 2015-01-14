@@ -29,7 +29,9 @@ Hardware Connections:
 Resources:
 Include SPI.h, SFE_CC3000.h, and SFE_CC3000_Client.h
 (SFE_CC3000_Library_master)
-String.h
+string.h
+Phant.h
+
 
 Development environment specifics:
 Written in Arduino 1.0.5
@@ -51,7 +53,6 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 #define CC3000_INT      2   // Needs to be an interrupt pin (D2/D3)
 #define CC3000_EN       7   // Can be any digital pin
 #define CC3000_CS       10  // Preferred is pin 10 on Uno
-
 #define IRPin           8 
 
 // Connection info data lengths
@@ -176,14 +177,17 @@ void setDisarmPost(){
 }
 
 void setArmPost(){
-  phant.add("armed",true);
+  phant.add("armed",true); //need both because we clear old data
+  phant.add("alert",false); 
 }
 
 void setAlertPost(){
+  phant.add("armed",true);
   phant.add("alert",true);
 }
 
 void setShutUpPost(){
+  phant.add("armed",true);
   phant.add("alert",true);
 }
 
@@ -192,11 +196,16 @@ void updateServer(){
   Serial.print("Posting to ");
   Serial.println(server);
   
+  phant.clear();
   phant.post();
   
   delay(waitTime);
   
 } //end updateServer
+
+void checkServer(){
+  Serial.println(phant.get());
+}
 
 void loop() {
   
