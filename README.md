@@ -10,19 +10,24 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 **wifi** 
 ----------------------------------------------------------------------------
   * prototype communication arduino over wifi
-  * currently posts to thing speak (user bgravelle pass Manito@2)
+  * will post to https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 
   **TO DO**
-  * fix posting issue
+  * remove all use of arduino's useless String class
+  * posting: establish TCP connection, send HTTP command from Phant object
   * find useful way to get info to app
   * make code pretty
   * incorporate BT
 
   **Known Problems**
-  * difficultly posting (appears to send message but TS doesn't get it)
   * trouble with WEP security- might have to send key as hex (see wlan.h in WiFi library's utility)
 
   **Versions**
+
+  *wifi_v1_4*
+   * not working
+   * switch from thingspeak to data.sparkfun.com feed
+   * gets input from IR and attempt to appropriately post
 
   *wifi_v1_3*
    * not working
@@ -47,6 +52,11 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
 **other stuff**
 ----------------------------------------------------------------------------
+**myPhant.cpp and .h**
+ * library to produce http commands to update data.sparkfun.com feed
+ * you must include it from the library folder in the sketchbook
+ *    but that is read only so edit it here then replace
+
 **WebClient_ex**
  * from Sparkfun
  * example connects to AP and sends GET to a website

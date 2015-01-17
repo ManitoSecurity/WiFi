@@ -1,3 +1,4 @@
+
 /****************************************************************
 wifi_v1_3.ino
 Manito Security Solutions
@@ -29,8 +30,7 @@ Hardware Connections:
 Resources:
 Include SPI.h, SFE_CC3000.h, and SFE_CC3000_Client.h
 (SFE_CC3000_Library_master)
-string.h
-Phant.h
+myPhant.h
 
 
 Development environment specifics:
@@ -46,7 +46,6 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 #include <SPI.h>
 #include <SFE_CC3000.h>
 #include <SFE_CC3000_Client.h>
-#include <string.h>
 #include <Phant.h>
 
 // Pins
@@ -59,12 +58,13 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
 // Constants
-unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
-unsigned int timeout = 60000;             // Milliseconds
-char server[] = "data.sparkfun.com";      // sparkfun data
-String pri_key = "7BMDzNyXeAf0Kl25JoW1";  // private key
-String pub_key = "5JZO9K83dRU0KlA39EGZ";  // public key
-int waitTime= 30000;                      // limit update interval
+unsigned int ap_security = WLAN_SEC_WPA2;  // Security of network
+unsigned int timeout = 60000;              // Milliseconds
+char server[] = "data.sparkfun.com";       // sparkfun data
+String host = String("data.sparkfun.com"); // sparkfun data
+String pri_key = "7BMDzNyXeAf0Kl25JoW1";   // private key
+String pub_key = "5JZO9K83dRU0KlA39EGZ";   // public key
+int waitTime= 30000;                       // limit update interval
 
 Phant phant(server, pub_key, pri_key);
 
@@ -165,9 +165,29 @@ void setup() {
   connectToWiFi();
   showConnectionInfo();
   lookupServerIP();
-  
+ 
   curr_alarm = 1;
   prev_alarm = 0;
+  
+  phant.add("armed",true);
+  phant.add("alert",false);
+
+  Serial.println("----TEST Concate-----");   
+  host += pri_key;
+  Serial.println(host);
+  Serial.println();
+
+  Serial.println("----TEST URL-----");
+  Serial.println(phant.url());
+  Serial.println();
+  
+  Serial.println("----HTTP POST----");
+  Serial.println(phant.post());  
+  Serial.println();
+  
+  Serial.println("----HTTP GET----");
+  Serial.println(phant.get());
+  Serial.println();
 
 } //end setup
 
@@ -196,7 +216,7 @@ void updateServer(){
   Serial.print("Posting to ");
   Serial.println(server);
   
-  phant.clear();
+   phant.clear();
   phant.post();
   
   delay(waitTime);
