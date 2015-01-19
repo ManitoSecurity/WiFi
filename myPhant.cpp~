@@ -20,84 +20,85 @@
  */
 
 #include "Arduino.h"
-#include "Phant.h"
+#include "myPhant.h"
+#include <string.h>
 
-Phant::Phant(String host, String publicKey, String privateKey) {
+Phant::Phant(string host, string publicKey, string privateKey) {
   _host = host;
   _pub = publicKey;
   _prv = privateKey;
   _params = "";
 }
 
-void Phant::add(String field, String data) {
+void Phant::add(string field, string data) {
 
   _params += "&" + field + "=" + data;
 
 }
 
-void Phant::add(String field, char data) {
+void Phant::add(string field, char data) {
 
-  _params += "&" + field + "=" + String(data);
-
-}
-
-void Phant::add(String field, int data) {
-
-  _params += "&" + field + "=" + String(data);
+  _params += "&" + field + "=" + std::to_string(data);
 
 }
 
-void Phant::add(String field, byte data) {
+void Phant::add(string field, int data) {
 
-  _params += "&" + field + "=" + String(data);
-
-}
-
-void Phant::add(String field, long data) {
-
-  _params += "&" + field + "=" + String(data);
+  _params += "&" + field + "=" + std::to_string(data);
 
 }
 
-void Phant::add(String field, unsigned int data) {
+void Phant::add(string field, byte data) {
 
-  _params += "&" + field + "=" + String(data);
-
-}
-
-void Phant::add(String field, unsigned long data) {
-
-  _params += "&" + field + "=" + String(data);
+  _params += "&" + field + "=" + std::to_string(data);
 
 }
 
-void Phant::add(String field, double data) {
+void Phant::add(string field, long data) {
+
+  _params += "&" + field + "=" + std::to_string(data);
+
+}
+
+void Phant::add(string field, unsigned int data) {
+
+  _params += "&" + field + "=" + std::to_string(data);
+
+}
+
+void Phant::add(string field, unsigned long data) {
+
+  _params += "&" + field + "=" + std::to_string(data);
+
+}
+
+void Phant::add(string field, double data) {
 
   char tmp[30];
 
   dtostrf(data, 1, 4, tmp);
 
-  _params += "&" + field + "=" + String(tmp);
+  _params += "&" + field + "=" + std::to_string(tmp);
 
 }
 
-void Phant::add(String field, float data) {
+void Phant::add(string field, float data) {
 
   char tmp[30];
 
   dtostrf(data, 1, 4, tmp);
 
-  _params += "&" + field + "=" + String(tmp);
+  _params += "&" + field + "=" + std::to_string(tmp);
 
 }
 
-String Phant::queryString() {
-  return String(_params);
+string Phant::queryString() {
+  return std::to_string(_params);
 }
 
-String Phant::url() {
+string Phant::url() {
 
-  String result = "http://" + _host + "/input/" + _pub + ".txt";
+  string result = "http://" + _host + "/input/" + _pub + ".txt";
   result += "?private_key=" + _prv + _params;
 
   _params = "";
@@ -106,9 +107,9 @@ String Phant::url() {
 
 }
 
-String Phant::get() {
+string Phant::get() {
 
-  String result = "GET /output/" + _pub + ".csv HTTP/1.1\n";
+  string result = "GET /output/" + _pub + ".csv HTTP/1.1\n";
   result += "Host: " + _host + "\n";
   result += "Connection: close\n";
 
@@ -116,16 +117,16 @@ String Phant::get() {
 
 }
 
-String Phant::post() {
+string Phant::post() {
 
-  String params = _params.substring(1);
+  string params = _params.substring(1);
 
-  String result = "POST /input/" + _pub + ".txt HTTP/1.1\n";
+  string result = "POST /input/" + _pub + ".txt HTTP/1.1\n";
   result += "Host: " + _host + "\n";
   result += "Phant-Private-Key: " + _prv + "\n";
   result += "Connection: close\n";
   result += "Content-Type: application/x-www-form-urlencoded\n";
-  result += "Content-Length: " + String(params.length()) + "\n\n";
+  result += "Content-Length: " + std::to_string(params.length()) + "\n\n";
   result += params;
 
   _params = "";
