@@ -24,7 +24,7 @@ class Phant {
     char* url();
     void get();
     void post();
-    char* clear();
+    void clear();
 
   private:
     char _pub[256];

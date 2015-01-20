@@ -86,13 +86,13 @@ void Phant::post() {
 
 }
 
-char* Phant::clear() {
+void Phant::clear() {
 
   int _param_length;
   _client->print("DELETE /input/"); _client->print(_pub); 
      _client->println(".txt HTTP/1.1");
-  result += "Host: " + _host + "\n";
-  result += "Phant-Private-Key: " + _prv + "\n";
-  result += "Connection: close\n";
+  _client->print("Host: "); _client->println(_host);
+  _client->print("Phant-Private-Key: "); _client->println(_prv);
+  _client->println("Connection: close");
 
 }

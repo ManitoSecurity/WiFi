@@ -20,7 +20,6 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   * incorporate BT
 
   **Known Problems**
-  * difficultly posting (appears to send message but TS doesn't get it)
   * trouble with WEP security- might have to send key as hex (see wlan.h in WiFi library's utility)
 
   **Versions**
@@ -55,8 +54,8 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 ----------------------------------------------------------------------------
 **myPhant.cpp and .h**
  * library to produce http commands to update data.sparkfun.com feed
- * you must include it from the library folder in the sketchbook
- *    but that is read only so edit it here then replace
+ * the original library provided by Sparkfun is incompatible with the WiFi chip
+ * this version is designed to connect to the server and send the messages
 
 **WebClient_ex**
  * from Sparkfun

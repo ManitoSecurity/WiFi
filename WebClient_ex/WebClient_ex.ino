@@ -38,9 +38,6 @@ buy us a round!
 
 Distributed as-is; no warranty is given.
 ****************************************************************/
-//#include <SFE_CC3000_Callbacks.h>
-//#include <SFE_CC3000_SPI.h>
-//#include <common.h>
 
 #include <SPI.h>
 #include <SFE_CC3000.h>

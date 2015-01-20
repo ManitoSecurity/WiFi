@@ -1,19 +1,14 @@
-
 /****************************************************************
 wifi_v1_3.ino
 Manito Security Solutions
 Brian Gravelle
 Jan 8, 2015
-
 Prototype for WiFi communication from Arduino
-
 many thanks to Shawn Hymel @ SparkFun Electronics for creating
   the CC3000 library
   https://github.com/sparkfun/SFE_CC3000_Library
-
 The security mode is defined by one of the following:
 WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA, WLAN_SEC_WPA2
-
 Hardware Connections:
  
  Uno Pin    CC3000 Board    Function
@@ -26,28 +21,23 @@ Hardware Connections:
  11         MOSI            SPI MOSI
  12         MISO            SPI MISO
  13         SCK             SPI Clock
-
 Resources:
 Include SPI.h, SFE_CC3000.h, and SFE_CC3000_Client.h
 (SFE_CC3000_Library_master)
-myPhant.h
-
-
+string.h
+Phant.h
 Development environment specifics:
 Written in Arduino 1.0.5
 Tested with Arduino UNO R3
-
 pub  5JZO9K83dRU0KlA39EGZ
 pri  7BMDzNyXeAf0Kl25JoW1
 url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
-
 ****************************************************************/
 
 #include <SPI.h>
 #include <SFE_CC3000.h>
 #include <SFE_CC3000_Client.h>
-#include <Phant.h>
-#include <string.h>
+#include <myPhant.h>
 
 // Pins
 #define CC3000_INT      2   // Needs to be an interrupt pin (D2/D3)
@@ -58,23 +48,25 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 // Connection info data lengths
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
-// Constants
-unsigned int ap_security = WLAN_SEC_WPA2;  // Security of network
-unsigned int timeout = 60000;              // Milliseconds
-char server[] = "data.sparkfun.com";       // sparkfun data
-char pri_key[] = "7BMDzNyXeAf0Kl25JoW1";   // private key
-char pub_key[] = "5JZO9K83dRU0KlA39EGZ";   // public key
-int waitTime= 30000;                       // limit update interval
-
-Phant phant(server, pub_key, pri_key);
-
 // Global Variables
 SFE_CC3000 wifi = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
 SFE_CC3000_Client client = SFE_CC3000_Client(wifi);
 
+//Phant phant(server, pub_key, pri_key);
+Phant phant = Phant("data.sparkfun.com", "VGb2Y1jD4VIxjX3x196z", "9YBaDk6yeMtNErDNq4YM");
+
+// Constants
+unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
+unsigned int timeout = 60000;             // Milliseconds
+char server[] = "data.sparkfun.com";      // sparkfun data
+String host;        // sparkfun data
+String pri_key;  // private key
+String pub_key;  // public key
+int waitTime= 30000;                      // limit update interval
+
 char ap_ssid[33];     // SSID of network
 char ap_password[33]; // Password of network
-char postString;    // string to post to thing speak
+String postString;    // string to post to thing speak
 int digiIRout;        // reading from IR
 int curr_alarm;
 int prev_alarm;
@@ -83,7 +75,6 @@ ConnectionInfo connection_info;
 
 
 void initCC3000(){
- 
   if ( wifi.init() ) {
     Serial.println("CC3000 initialization complete");
   } else {
@@ -149,6 +140,12 @@ void lookupServerIP(){
   }
 }
 
+void test(){
+ 
+  String test = host + pri_key; 
+  Serial.println(test); 
+}
+
 void setup() {
   
   // Initialize Serial port
@@ -158,36 +155,39 @@ void setup() {
   Serial.println("        Manito WiFi        ");
   Serial.println("---------------------------");
   
-  pinMode(IRPin, INPUT);      
-    
+  pinMode(IRPin, INPUT);
+
+  host = String("data.sparkfun.com");        // sparkfun data
+  pri_key = String("7BMDzNyXeAf0Kl25JoW1");  // private key
+  pub_key = String("5JZO9K83dRU0KlA39EGZ");  // public key  
+
+  phant.add("val1", "url");
+  phant.add("val2", 22);
+  phant.add("val3", 0.1234);
+
+  Serial.println("----TEST URL 1-----");
+  Serial.println(phant.url());
+
+  Serial.println("----TEST concate-----");
+  test();
+
   initCC3000();  
-  getWiFiInfo();  
+/*  getWiFiInfo(); 
   connectToWiFi();
   showConnectionInfo();
   lookupServerIP();
- 
+*/  
   curr_alarm = 1;
   prev_alarm = 0;
-  
-  phant.add("armed",true);
-  phant.add("alert",false);
 
-  Serial.println("----TEST Concate-----");   
-  host += pri_key;
-  Serial.println(host);
-  Serial.println();
+  phant.add("val1", "url");
+  phant.add("val2", 22);
+  phant.add("val3", 0.1234);
 
-  Serial.println("----TEST URL-----");
+  Serial.println("----TEST URL 2-----");
   Serial.println(phant.url());
-  Serial.println();
   
-  Serial.println("----HTTP POST----");
-  Serial.println(phant.post());  
-  Serial.println();
-  
-  Serial.println("----HTTP GET----");
-  Serial.println(phant.get());
-  Serial.println();
+  while(1){}
 
 } //end setup
 

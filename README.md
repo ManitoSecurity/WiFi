@@ -54,8 +54,9 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 ----------------------------------------------------------------------------
 **myPhant.cpp and .h**
  * library to produce http commands to update data.sparkfun.com feed
- * you must include it from the library folder in the sketchbook
- *    but that is read only so edit it here then replace
+ * the original library provided by Sparkfun is incompatible with the WiFi chip
+ * this version is designed to connect to the server and send the messages
+ * WiFi actually includes the versions in sketchbook/libraries, so update those
 
 **WebClient_ex**
  * from Sparkfun
