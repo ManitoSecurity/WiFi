@@ -21,7 +21,7 @@ class Phant {
     bool connect();
     bool isConnected();
     bool close();
-    void add(char* field, char* data);
+    void add(String field, String data);
     char* queryString();
     char* url();
     void get();

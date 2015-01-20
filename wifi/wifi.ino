@@ -24,11 +24,12 @@ Hardware Connections:
 Resources:
 Include SPI.h, SFE_CC3000.h, and SFE_CC3000_Client.h
 (SFE_CC3000_Library_master)
-string.h
-Phant.h
+myPhant.h
+
 Development environment specifics:
 Written in Arduino 1.0.5
 Tested with Arduino UNO R3
+
 pub  5JZO9K83dRU0KlA39EGZ
 pri  7BMDzNyXeAf0Kl25JoW1
 url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
@@ -48,30 +49,27 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 // Connection info data lengths
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
-// Global Variables
-SFE_CC3000 wifi = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
-SFE_CC3000_Client client = SFE_CC3000_Client(wifi);
-
-//Phant phant(server, pub_key, pri_key);
-Phant phant = Phant("data.sparkfun.com", "VGb2Y1jD4VIxjX3x196z", "9YBaDk6yeMtNErDNq4YM");
-
 // Constants
 unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
+
 char server[] = "data.sparkfun.com";      // sparkfun data
-String host;        // sparkfun data
-String pri_key;  // private key
-String pub_key;  // public key
+char pub_key[] = "5JZO9K83dRU0KlA39EGZ";  // public key
+char pri_key[] = "7BMDzNyXeAf0Kl25JoW1";  // private key
 int waitTime= 30000;                      // limit update interval
 
+// Global Variables
 char ap_ssid[33];     // SSID of network
 char ap_password[33]; // Password of network
-String postString;    // string to post to thing speak
+IPAddress remote_ip;
+ConnectionInfo connection_info;
 int digiIRout;        // reading from IR
 int curr_alarm;
 int prev_alarm;
-IPAddress remote_ip;
-ConnectionInfo connection_info;
+
+SFE_CC3000 wifi          = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
+SFE_CC3000_Client client = SFE_CC3000_Client(wifi);
+Phant phant              = Phant(server, pub_key, pri_key, &client);
 
 
 void initCC3000(){
@@ -84,7 +82,7 @@ void initCC3000(){
 }
 
 void getWiFiInfo(){
-  
+ 
   Serial.setTimeout(10000);
   Serial.print("Enter SSID: ");
   Serial.readBytesUntil('\n',ap_ssid,33);
@@ -93,7 +91,8 @@ void getWiFiInfo(){
   Serial.readBytesUntil('\n',ap_password,33);
   delay(1000);
   Serial.println("\n");
-  
+ 
+   
 }
 
 void connectToWiFi(){
@@ -140,12 +139,6 @@ void lookupServerIP(){
   }
 }
 
-void test(){
- 
-  String test = host + pri_key; 
-  Serial.println(test); 
-}
-
 void setup() {
   
   // Initialize Serial port
@@ -157,74 +150,56 @@ void setup() {
   
   pinMode(IRPin, INPUT);
 
-  host = String("data.sparkfun.com");        // sparkfun data
-  pri_key = String("7BMDzNyXeAf0Kl25JoW1");  // private key
-  pub_key = String("5JZO9K83dRU0KlA39EGZ");  // public key  
-
-  phant.add("val1", "url");
-  phant.add("val2", 22);
-  phant.add("val3", 0.1234);
-
-  Serial.println("----TEST URL 1-----");
-  Serial.println(phant.url());
-
-  Serial.println("----TEST concate-----");
-  test();
-
   initCC3000();  
-/*  getWiFiInfo(); 
+  getWiFiInfo(); 
   connectToWiFi();
   showConnectionInfo();
   lookupServerIP();
-*/  
+  
   curr_alarm = 1;
   prev_alarm = 0;
-
-  phant.add("val1", "url");
-  phant.add("val2", 22);
-  phant.add("val3", 0.1234);
-
-  Serial.println("----TEST URL 2-----");
-  Serial.println(phant.url());
-  
-  while(1){}
 
 } //end setup
 
 void setDisarmPost(){
-  phant.add("armed",false);
-  phant.add("alert",false); 
+  phant.add("armed","F");
+  phant.add("alert","F"); 
 }
 
 void setArmPost(){
-  phant.add("armed",true); //need both because we clear old data
-  phant.add("alert",false); 
+  phant.add("armed","T"); //need both because we clear old data
+  phant.add("alert","F"); 
 }
 
 void setAlertPost(){
-  phant.add("armed",true);
-  phant.add("alert",true);
+  phant.add("armed","T");
+  phant.add("alert","T");
 }
 
 void setShutUpPost(){
-  phant.add("armed",true);
-  phant.add("alert",true);
+  phant.add("armed","T");
+  phant.add("alert","F");
 }
 
 void updateServer(){  
   
-  Serial.print("Posting to ");
-  Serial.println(server);
   
-  phant.clear();
-  phant.post();
+  if(phant.connect()) {
+    Serial.print("Posting to ");
+    Serial.println(server);
+    phant.clear();
+    phant.post();
+  } else {
+    Serial.print("Failed to connect to ");
+    Serial.println(server);  
+  }
   
   delay(waitTime);
   
 } //end updateServer
 
 void checkServer(){
-  Serial.println(phant.get());
+  phant.get();
 }
 
 void loop() {

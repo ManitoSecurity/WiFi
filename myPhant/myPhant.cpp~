@@ -57,13 +57,13 @@ char* Phant::queryString() {
 }
 
 char* Phant::url() {
-/*
+
   String result = "http://" + _host + "/input/" + _pub + ".txt";
   result += "?private_key=" + _prv + _params;
 
   _params = "";
-*/
-  return "this doesn't do anytihng yet";
+
+  return result;
 
 }
 
@@ -87,7 +87,7 @@ void Phant::post() {
   _client->print("Phant-Private-Key: "); _client->println(_prv);
   _client->println("Connection: close");
   _client->println("Content-Type: application/x-www-form-urlencoded");
-  _client->print("Content-Length: "); _client->print(_param_length);
+  _client->print("Content-Length: "); _client->print(_params_length);
   _client->print("\n\n");
   _client->print(params);
 
