@@ -52,13 +52,11 @@ Distributed as-is; no warranty is given.
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
 // Constants
-//char ap_ssid[] = "HOME-70D6";                  // SSID of network
-//char ap_password[] = "979534b3c6bd7e89";          // Password of network
 char ap_ssid[] = "weefee";                  // SSID of network
 char ap_password[] = "abcdefghijk";          // Password of network
-unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
+unsigned int ap_security = WLAN_SEC_WEP; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
-char server[] = "www.manitosecurity.com";        // Remote host site
+char server[] = "www.example.com";        // Remote host site
 
 // Global Variables
 SFE_CC3000 wifi = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);

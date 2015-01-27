@@ -50,7 +50,7 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
 // Constants
-unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
+unsigned int ap_security = WLAN_SEC_WEP; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
 
 char server[] = "data.sparkfun.com";      // sparkfun data
@@ -74,9 +74,11 @@ Phant phant              = Phant(server, pub_key, pri_key, &client);
 
 void initCC3000(){
   if ( wifi.init() ) {
-    Serial.println("CC3000 initialization complete");
+    Serial.print("CC3000 initialization complete");
+    Serial.print("\n"); 
   } else {
-    Serial.println("Something went wrong during CC3000 init!");
+    Serial.print("Something went wrong during CC3000 init!");
+    Serial.print("\n"); 
   }
   
 }
@@ -90,16 +92,17 @@ void getWiFiInfo(){
   Serial.print("\nEnter Password: ");
   Serial.readBytesUntil('\n',ap_password,33);
   delay(1000);
-  Serial.println("\n");
- 
-   
+  Serial.print("\n\n"); 
+  
 }
 
 void connectToWiFi(){
   Serial.print("Connecting to SSID: ");
-  Serial.println(ap_ssid);
+  Serial.print(ap_ssid);
+  Serial.print("\n"); 
   if(!wifi.connect(ap_ssid, ap_security, ap_password, timeout)) {
-    Serial.println("Error: Could not connect to AP");
+    Serial.print("Error: Could not connect to AP");
+    Serial.print("\n"); 
   }
 }
 
@@ -107,7 +110,8 @@ void showConnectionInfo(){
   int i;
   
   if ( !wifi.getConnectionInfo(connection_info) ) {
-    Serial.println("Error: Could not obtain connection details");
+    Serial.print("Error: Could not obtain connection details");
+    Serial.print("\n"); 
   } else {
     Serial.print("IP Address: ");
     for (i = 0; i < IP_ADDR_LEN; i++) {
@@ -116,7 +120,7 @@ void showConnectionInfo(){
         Serial.print(".");
       }
     }
-    Serial.println();
+    Serial.print("\n"); 
   }  
 }
 
@@ -124,9 +128,11 @@ void lookupServerIP(){
   int i;
  
   Serial.print("Looking up IP address of: ");
-  Serial.println(server);
+  Serial.print(server);
+  Serial.print("\n"); 
   if ( !wifi.dnsLookup(server, &remote_ip) ) {
-    Serial.println("Error: Could not lookup host by name");
+    Serial.print("Error: Could not lookup host by name");
+    Serial.print("\n"); 
   } else {
     Serial.print("IP address found: ");
     for (i = 0; i < IP_ADDR_LEN; i++) {
@@ -138,28 +144,6 @@ void lookupServerIP(){
     Serial.println();
   }
 }
-
-void setup() {
-  
-  // Initialize Serial port
-  Serial.begin(115200);
-  Serial.println();
-  Serial.println("---------------------------");
-  Serial.println("        Manito WiFi        ");
-  Serial.println("---------------------------");
-  
-  pinMode(IRPin, INPUT);
-
-  initCC3000();  
-  getWiFiInfo(); 
-  connectToWiFi();
-  showConnectionInfo();
-  lookupServerIP();
-  
-  curr_alarm = 1;
-  prev_alarm = 0;
-
-} //end setup
 
 void setDisarmPost(){
   phant.add("armed","F");
@@ -186,12 +170,14 @@ void updateServer(){
   
   if(phant.connect()) {
     Serial.print("Posting to ");
-    Serial.println(server);
-    phant.clear();
+    Serial.print(server);
+    Serial.print("\n"); 
+    //phant.clear();
     phant.post();
   } else {
     Serial.print("Failed to connect to ");
-    Serial.println(server);  
+    Serial.print(server); 
+    Serial.print("\n"); 
   }
   
   delay(waitTime);
@@ -201,6 +187,36 @@ void updateServer(){
 void checkServer(){
   phant.get();
 }
+
+
+void setup() {
+  
+  // Initialize Serial port
+  Serial.begin(115200);
+  Serial.print("\n"); 
+  Serial.print("---------------------------\n");
+  Serial.print("        Manito WiFi        \n");
+  Serial.print("---------------------------\n");
+  
+  pinMode(IRPin, INPUT);
+
+  initCC3000();  
+  getWiFiInfo(); 
+  connectToWiFi();
+  showConnectionInfo();
+  lookupServerIP();
+  
+  curr_alarm = 1;
+  prev_alarm = 0;
+
+  Serial.print("       Setup Complete      \n");
+  Serial.print("---------------------------\n");
+  
+  setAlertPost();
+  updateServer();
+  
+} //end setup
+
 
 void loop() {
   
