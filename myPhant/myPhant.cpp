@@ -13,14 +13,14 @@
 
 #include "myPhant.h"
 
-Phant::Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client client)
+Phant::Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000 &cc3000)
 {
   _host = host;
   _pub = publicKey;
   _prv = privateKey;
   _params[0] = '\0';
   _param_length = 0;
-  _client = client;
+  _client = SFE_CC3000_Client(cc3000);
 }
 
 bool Phant::connect()

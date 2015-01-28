@@ -13,29 +13,29 @@
 
 #include "myPhant.h"
 
-Phant::Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client client)
+Phant::Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client &client)
 {
   _host = host;
   _pub = publicKey;
   _prv = privateKey;
   _params[0] = '\0';
   _param_length = 0;
-  _client = client;
+  _client = SFE_CC3000_Client(&client);
 }
 
 bool Phant::connect()
 {
-  return _client->connect(_host, 80);
+  return _client.connect(_host, 80);
 }
 
 bool Phant::isConnected()
 {
-  return _client->connected();
+  return _client.connected();
 }
 
 bool Phant::close()
 {
-  return _client->close();
+  return _client.close();
 }
 
 void Phant::add(char* field, char* data) 
@@ -79,10 +79,10 @@ char* Phant::url() {
 void Phant::get() 
 {
 
-  _client->print("GET /output/"); _client->print(_pub); 
-     _client->println(".csv HTTP/1.1");
-  _client->print("Host: "); _client->println(_host);
-  _client->println("Connection: close");
+  _client.print("GET /output/"); _client.print(_pub); 
+     _client.println(".csv HTTP/1.1");
+  _client.print("Host: "); _client.println(_host);
+  _client.println("Connection: close");
 
 }
 
@@ -92,15 +92,15 @@ void Phant::post()
   //skip first &
   char* params = &_params[1];
 
-  _client->print("POST /input/"); _client->print(_pub); 
-      _client->println(".txt HTTP/1.1");
-  _client->print("Host: "); _client->println(_host);
-  _client->print("Phant-Private-Key: "); _client->println(_prv);
-  _client->println("Connection: close");
-  _client->println("Content-Type: application/x-www-form-urlencoded");
-  _client->print("Content-Length: "); _client->print(_param_length);
-  _client->print("\n\n");
-  _client->print(params);
+  _client.print("POST /input/"); _client.print(_pub); 
+      _client.println(".txt HTTP/1.1");
+  _client.print("Host: "); _client.println(_host);
+  _client.print("Phant-Private-Key: "); _client.println(_prv);
+  _client.println("Connection: close");
+  _client.println("Content-Type: application/x-www-form-urlencoded");
+  _client.print("Content-Length: "); _client.print(_param_length);
+  _client.print("\n\n");
+  _client.print(params);
 
   _params = "";
 
@@ -110,10 +110,10 @@ void Phant::clear()
 {
 
   int _param_length;
-  _client->print("DELETE /input/"); _client->print(_pub); 
-     _client->println(".txt HTTP/1.1");
-  _client->print("Host: "); _client->println(_host);
-  _client->print("Phant-Private-Key: "); _client->println(_prv);
-  _client->println("Connection: close");
+  _client.print("DELETE /input/"); _client.print(_pub); 
+     _client.println(".txt HTTP/1.1");
+  _client.print("Host: "); _client.println(_host);
+  _client.print("Phant-Private-Key: "); _client.println(_prv);
+  _client.println("Connection: close");
 
 }

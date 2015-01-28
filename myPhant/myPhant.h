@@ -17,7 +17,7 @@
 class Phant {
 
   public:
-    Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client client);
+    Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000 &cc3000);
     bool connect();
     bool isConnected();
     bool close();

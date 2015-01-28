@@ -68,8 +68,7 @@ int curr_alarm;
 int prev_alarm;
 
 SFE_CC3000 wifi          = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
-SFE_CC3000_Client client = SFE_CC3000_Client(wifi);
-Phant phant              = Phant(server, pub_key, pri_key, client);
+Phant phant              = Phant(server, pub_key, pri_key, wifi);
 
 
 void initCC3000(){
