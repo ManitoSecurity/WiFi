@@ -24,6 +24,11 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   **Versions**
 
+  *wifi_v1_5*
+   * not tested
+   * making it work with data.sparkfun.com
+   * uses myPhant class (phant is sparkfun's name for thier server system)
+
   *wifi_v1_4*
    * not working
    * switch from thingspeak to data.sparkfun.com feed

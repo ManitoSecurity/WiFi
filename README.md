@@ -25,7 +25,7 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   **Versions**
 
   *wifi_v1_5*
-   * not tested
+   * not working- seems to dump memory to Serial at the end of setup()
    * making it work with data.sparkfun.com
    * uses myPhant class (phant is sparkfun's name for thier server system)
 
