@@ -9,21 +9,21 @@
 #ifndef Phant_h
 #define Phant_h
 
-#include "Arduino.h"
-#include <SPI.h>
+//#include "Arduino.h"
+//#include <SPI.h>
 #include <SFE_CC3000.h>
 #include <SFE_CC3000_Client.h>
 
 class Phant {
 
   public:
-    Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client* client);
+    Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client client);
     bool connect();
     bool isConnected();
     bool close();
     void add(char* field, char* data);
     char* queryString();
-    char* url();
+    //char* url();
     void get();
     void post();
     void clear();
@@ -34,7 +34,7 @@ class Phant {
     char* _host;
     char* _params;
     int _param_length;
-    SFE_CC3000_Client* _client;
+    SFE_CC3000_Client _client;
 
 };
 

@@ -52,8 +52,8 @@ Distributed as-is; no warranty is given.
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
 // Constants
-char ap_ssid[] = "weefee";                  // SSID of network
-char ap_password[] = "abcdefghijk";          // Password of network
+char ap_ssid[] = "Gonzaga Lite";                  // SSID of network
+char ap_password[] = PassWord_here;          // Password of network
 unsigned int ap_security = WLAN_SEC_WEP; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
 char server[] = "www.example.com";        // Remote host site
@@ -61,6 +61,8 @@ char server[] = "www.example.com";        // Remote host site
 // Global Variables
 SFE_CC3000 wifi = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
 SFE_CC3000_Client client = SFE_CC3000_Client(wifi);
+//SFE_CC3000_Client *client = '\0';
+
 
 void setup() {
   
@@ -80,6 +82,9 @@ void setup() {
   } else {
     Serial.println("Something went wrong during CC3000 init!");
   }
+  
+  
+  //*client = SFE_CC3000_Client(wifi);
   
   // Connect using DHCP
   Serial.print("Connecting to SSID: ");

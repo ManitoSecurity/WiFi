@@ -14,7 +14,7 @@ library to interface between CC3000 WiFi Chip and data.sparkfun.com
   * test and fix
 
   **Known Problems**
-  * untested
+  * somthing is wrong somewhere but it may not be with phant
 
   **Versions**
 

@@ -69,7 +69,7 @@ int prev_alarm;
 
 SFE_CC3000 wifi          = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
 SFE_CC3000_Client client = SFE_CC3000_Client(wifi);
-Phant phant              = Phant(server, pub_key, pri_key, &client);
+Phant phant              = Phant(server, pub_key, pri_key, client);
 
 
 void initCC3000(){
@@ -141,7 +141,7 @@ void lookupServerIP(){
         Serial.print(".");
       }
     }
-    Serial.println();
+    Serial.print("\n");
   }
 }
 
@@ -177,7 +177,7 @@ void updateServer(){
   } else {
     Serial.print("Failed to connect to ");
     Serial.print(server); 
-    Serial.print("\n"); 
+    Serial.print("\n");   
   }
   
   delay(waitTime);
@@ -209,11 +209,11 @@ void setup() {
   curr_alarm = 1;
   prev_alarm = 0;
 
-  Serial.print("       Setup Complete      \n");
-  Serial.print("---------------------------\n");
-  
   setAlertPost();
   updateServer();
+
+  Serial.print("       Setup Complete      \n");
+  Serial.print("---------------------------\n");
   
 } //end setup
 

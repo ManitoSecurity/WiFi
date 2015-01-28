@@ -6,11 +6,15 @@
  *
  */
  
+//#include "Arduino.h"
+//#include <SPI.h>
+#include <SFE_CC3000.h>
+#include <SFE_CC3000_Client.h>
 
-#include "Arduino.h"
 #include "myPhant.h"
 
-Phant::Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client* client) {
+Phant::Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client client)
+{
   _host = host;
   _pub = publicKey;
   _prv = privateKey;
@@ -19,19 +23,23 @@ Phant::Phant(char* host, char* publicKey, char* privateKey, SFE_CC3000_Client* c
   _client = client;
 }
 
-bool Phant::connect(){
-  return _client->connect(_host, 80);
+bool Phant::connect()
+{
+  return _client.connect(_host, 80);
 }
 
-bool Phant::isConnected(){
-  return _client->connected();
+bool Phant::isConnected()
+{
+  return _client.connected();
 }
 
-bool Phant::close(){
-  return _client->close();
+bool Phant::close()
+{
+  return _client.close();
 }
 
-void Phant::add(char* field, char* data) {
+void Phant::add(char* field, char* data) 
+{
 
   int j = 0;
 
@@ -52,56 +60,60 @@ void Phant::add(char* field, char* data) {
 
 }
 
-char* Phant::queryString() {
+char* Phant::queryString() 
+{
   return _params;
 }
-
-char* Phant::url() {
 /*
+char* Phant::url() {
+
   String result = "http://" + _host + "/input/" + _pub + ".txt";
   result += "?private_key=" + _prv + _params;
 
   _params = "";
-*/
+
   return "this doesn't do anytihng yet";
 
 }
+*/
+void Phant::get() 
+{
 
-void Phant::get() {
-
-  _client->print("GET /output/"); _client->print(_pub); 
-     _client->println(".csv HTTP/1.1");
-  _client->print("Host: "); _client->println(_host);
-  _client->println("Connection: close");
+  _client.print("GET /output/"); _client.print(_pub); 
+     _client.println(".csv HTTP/1.1");
+  _client.print("Host: "); _client.println(_host);
+  _client.println("Connection: close");
 
 }
 
-void Phant::post() {
+void Phant::post() 
+{
 
   //skip first &
   char* params = &_params[1];
 
-  _client->print("POST /input/"); _client->print(_pub); 
-      _client->println(".txt HTTP/1.1");
-  _client->print("Host: "); _client->println(_host);
-  _client->print("Phant-Private-Key: "); _client->println(_prv);
-  _client->println("Connection: close");
-  _client->println("Content-Type: application/x-www-form-urlencoded");
-  _client->print("Content-Length: "); _client->print(_param_length);
-  _client->print("\n\n");
-  _client->print(params);
+  _client.print("POST /input/"); _client.print(_pub); 
+      _client.println(".txt HTTP/1.1");
+  _client.print("Host: "); _client.println(_host);
+  _client.print("Phant-Private-Key: "); _client.println(_prv);
+  _client.println("Connection: close");
+  _client.println("Content-Type: application/x-www-form-urlencoded");
+  _client.print("Content-Length: "); _client.print(_param_length);
+  _client.print("\n\n");
+  _client.print(params);
 
   _params = "";
 
 }
 
-void Phant::clear() {
+void Phant::clear() 
+{
 
   int _param_length;
-  _client->print("DELETE /input/"); _client->print(_pub); 
-     _client->println(".txt HTTP/1.1");
-  _client->print("Host: "); _client->println(_host);
-  _client->print("Phant-Private-Key: "); _client->println(_prv);
-  _client->println("Connection: close");
+  _client.print("DELETE /input/"); _client.print(_pub); 
+     _client.println(".txt HTTP/1.1");
+  _client.print("Host: "); _client.println(_host);
+  _client.print("Phant-Private-Key: "); _client.println(_prv);
+  _client.println("Connection: close");
 
 }
