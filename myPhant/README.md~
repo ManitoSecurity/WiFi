@@ -11,18 +11,19 @@ library to interface between CC3000 WiFi Chip and data.sparkfun.com
   * sends HTTP messages to data.sparkfun.com
 
   **TO DO**
-  * test and fix
+  * fix add()
 
   **Known Problems**
-  * untested
+  * somthing is wrong in the add method
+  * struggle with '&' character and might not 
 
   **Versions**
 
-  *wifi_v0_2*
+  *myPhant_v0_2*
    * not working
    * minor repairs (now it compiles!)
 
-  *wifi_v0_1*
+  *myPhant_v0_1*
    * not working
    * first try
 

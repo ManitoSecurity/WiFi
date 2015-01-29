@@ -38,12 +38,12 @@ bool Phant::close()
   return _client.close();
 }
 
-void Phant::add(char* field, char* data) 
+char* Phant::add(char* field, char* data) 
 {
 
   int j = 0;
 
-  _params[_param_length] = '&';
+  _params[_param_length] = 0x26;
   _param_length++;
   while(field[j] != '\0') {
      _params[_param_length] = field[j];
@@ -57,6 +57,8 @@ void Phant::add(char* field, char* data)
      _params[_param_length] = data[j];
      j++; _param_length++;
   }
+
+  return _params;
 
 }
 

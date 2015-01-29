@@ -13,9 +13,9 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   * will post to https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 
   **TO DO**
+  * resolve phant.add() issues
   * remove all use of arduino's useless String class
   * posting: establish TCP connection, send HTTP command from Phant object
-  * find useful way to get info to app
   * make code pretty
   * incorporate BT
 
@@ -26,6 +26,7 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   *wifi_v1_5*
    * not working- seems to dump memory to Serial at the end of setup()
+   * problem occurs in phant.add
    * making it work with data.sparkfun.com
    * uses myPhant class (phant is sparkfun's name for thier server system)
 

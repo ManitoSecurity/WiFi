@@ -67,8 +67,8 @@ int digiIRout;        // reading from IR
 int curr_alarm;
 int prev_alarm;
 
-SFE_CC3000 wifi          = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
-Phant phant              = Phant(server, pub_key, pri_key, wifi);
+SFE_CC3000 wifi(CC3000_INT, CC3000_EN, CC3000_CS);
+Phant phant(server, pub_key, pri_key, wifi);
 
 
 void initCC3000(){
@@ -155,8 +155,27 @@ void setArmPost(){
 }
 
 void setAlertPost(){
-  phant.add("armed","T");
+  Serial.print("\n"); 
+  Serial.print("Heyyy");
+  Serial.print("\n");
+   
+  Serial.print('&');
+  Serial.print("\n");
+  Serial.print((char)0x26);
+  Serial.print("\n");
+  Serial.flush();
+  
+  Serial.print(phant.add("armed","T"));
+  Serial.print("\n");
+  Serial.print("\n");
+  Serial.print("\n");
+  Serial.print("\n");
+  
   phant.add("alert","T");
+   
+  Serial.print("\n"); 
+  Serial.print("YO");
+  Serial.print("\n");
 }
 
 void setShutUpPost(){
@@ -165,18 +184,19 @@ void setShutUpPost(){
 }
 
 void updateServer(){  
-  
-  
-  if(phant.connect()) {
+  boolean connection = phant.connect();
+  delay(100);
+  if(connection) {
     Serial.print("Posting to ");
     Serial.print(server);
     Serial.print("\n"); 
     //phant.clear();
     phant.post();
   } else {
+    Serial.print('\n');
     Serial.print("Failed to connect to ");
     Serial.print(server); 
-    Serial.print("\n");   
+    Serial.print('\n');   
   }
   
   delay(waitTime);
@@ -204,15 +224,23 @@ void setup() {
   connectToWiFi();
   showConnectionInfo();
   lookupServerIP();
-  
+   
   curr_alarm = 1;
   prev_alarm = 0;
-
+  
   setAlertPost();
-  updateServer();
+  Serial.print("\n"); 
+  Serial.print("SUP");
+  Serial.print("\n");
+  updateServer();  
+  Serial.print("\n"); 
+  Serial.print("DOG?");
+  Serial.print("\n");
 
-  Serial.print("       Setup Complete      \n");
-  Serial.print("---------------------------\n");
+  Serial.print("       Setup Complete      ");
+  Serial.print("\n"); 
+  Serial.print("---------------------------");
+  Serial.print("\n"); 
   
 } //end setup
 
