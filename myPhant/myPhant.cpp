@@ -40,7 +40,10 @@ bool Phant::close()
 
 char* Phant::add(char* field, char* data) 
 {
-
+  _params = "&alert=T&armed=F";
+  _param_length = 16;
+  return "Hi there";
+/*
   int j = 0;
 
   _params[_param_length] = 0x26;
@@ -57,9 +60,11 @@ char* Phant::add(char* field, char* data)
      _params[_param_length] = data[j];
      j++; _param_length++;
   }
+  _params[_param_length] = '\0';
+  _param_length++;
 
   return _params;
-
+*/
 }
 
 char* Phant::queryString() 

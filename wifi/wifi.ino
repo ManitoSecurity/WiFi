@@ -50,7 +50,7 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
 // Constants
-unsigned int ap_security = WLAN_SEC_WEP; // Security of network
+unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
 
 char server[] = "data.sparkfun.com";      // sparkfun data
@@ -158,20 +158,15 @@ void setAlertPost(){
   Serial.print("\n"); 
   Serial.print("Heyyy");
   Serial.print("\n");
-   
-  Serial.print('&');
-  Serial.print("\n");
-  Serial.print((char)0x26);
-  Serial.print("\n");
-  Serial.flush();
   
-  Serial.print(phant.add("armed","T"));
+  phant.add("armed","T");
   Serial.print("\n");
+  Serial.print("made it");
   Serial.print("\n");
   Serial.print("\n");
   Serial.print("\n");
   
-  phant.add("alert","T");
+  Serial.print(phant.add("alert","T"));
    
   Serial.print("\n"); 
   Serial.print("YO");
