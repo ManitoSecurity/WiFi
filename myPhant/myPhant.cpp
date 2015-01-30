@@ -98,7 +98,17 @@ void Phant::post()
 
   //skip first &
   char* params = &_params[1];
+  
+  _client.println("POST /input/5JZO9K83dRU0KlA39EGZ.txt HTTP/1.1");
+  _client.println("Host: data.sparkfun.com");
+  _client.println("Phant-Private-Key: 7BMDzNyXeAf0Kl25JoW1");
+  _client.println("Connection: close");
+  _client.println("Content-Type: application/x-www-form-urlencoded");
+  _client.println("Content-Length: 16");
+  _client.println();
+  _client.print("alert=F&armed=T");
 
+/*
   _client.print("POST /input/"); _client.print(_pub); 
       _client.println(".txt HTTP/1.1");
   _client.print("Host: "); _client.println(_host);
@@ -108,7 +118,7 @@ void Phant::post()
   _client.print("Content-Length: "); _client.print(_param_length);
   _client.print("\n\n");
   _client.print(params);
-
+*/
   _params = "";
 
 }

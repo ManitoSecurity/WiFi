@@ -56,7 +56,7 @@ unsigned int timeout = 60000;             // Milliseconds
 char server[] = "data.sparkfun.com";      // sparkfun data
 char pub_key[] = "5JZO9K83dRU0KlA39EGZ";  // public key
 char pri_key[] = "7BMDzNyXeAf0Kl25JoW1";  // private key
-int waitTime= 30000;                      // limit update interval
+int waitTime= 300;                      // limit update interval
 
 // Global Variables
 char ap_ssid[33];     // SSID of network
@@ -185,6 +185,7 @@ void updateServer(){
     Serial.print("Posting to ");
     Serial.print(server);
     Serial.print("\n"); 
+    phant.post();
     //phant.clear();
     phant.post();
   } else {
