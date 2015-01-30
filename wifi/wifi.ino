@@ -154,10 +154,10 @@ void setArmPost(){
   phant.add("alert","F"); 
 }
 
-void setAlertPost(){
-  
-  phant.add("armed","T");  
-  phant.add("alert","T");
+void setAlertPost(){;
+  Serial.println(phant.add("&armed=F&alert=F", 16)); 
+  delay(300000); 
+  //Serial.println(phant.add("alert","T"));
 
 }
 
@@ -173,9 +173,8 @@ void updateServer(){
     Serial.print("Posting to ");
     Serial.print(server);
     Serial.print("\n"); 
-    phant.post();
     //phant.clear();
-    phant.post();
+    phant.post("armed=F&alert=F");
   } else {
     Serial.print('\n');
     Serial.print("Failed to connect to ");
@@ -212,7 +211,7 @@ void setup() {
   curr_alarm = 1;
   prev_alarm = 0;
   
-  setAlertPost();
+  //setAlertPost();
   updateServer();  
 
   Serial.print("       Setup Complete      ");

@@ -38,15 +38,33 @@ bool Phant::close()
   return _client.close();
 }
 
+char* Phant::add(char* param, int length)
+{
+  int j = 0;
+  
+  //while(field[j] != '\0') {
+  while(j < 17) {
+     _params[j] = param[j];
+     j++;
+  }
+
+  _params[j] = '\0';
+
+  return _params;
+
+}
+
 char* Phant::add(char* field, char* data) 
 {
+
   _params = "&alert=T&armed=F";
   _param_length = 15;
   return "Hi there";
+
 /*
   int j = 0;
 
-  _params[_param_length] = 0x26;
+  _params[_param_length] = '&';
   _param_length++;
   while(field[j] != '\0') {
      _params[_param_length] = field[j];
@@ -63,7 +81,7 @@ char* Phant::add(char* field, char* data)
   _params[_param_length] = '\0';
   _param_length++;
 
-  return _params;
+  return "hi";
 */
 }
 
@@ -93,24 +111,25 @@ void Phant::get()
 
 }
 
-void Phant::post() 
+void Phant::post(char* params) 
 {
 
   //skip first &
-  char* params = &_params[1];
+  //char* params = &_params[1];
   
-
   _client.print("POST /input/"); _client.print(_pub); 
       _client.println(".txt HTTP/1.1");
   _client.print("Host: "); _client.println(_host);
   _client.print("Phant-Private-Key: "); _client.println(_prv);
   _client.println("Connection: close");
   _client.println("Content-Type: application/x-www-form-urlencoded");
-  _client.print("Content-Length: "); _client.print(_param_length);
+  //_client.print("Content-Length: "); _client.print(_param_length);
+  _client.print("Content-Length: 15");
   _client.print("\n\n");
   _client.print(params);
 
-  _params = "";
+  _params[0] = '\0';
+  _param_length = 0;
 
 }
 

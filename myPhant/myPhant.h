@@ -22,10 +22,12 @@ class Phant {
     bool isConnected();
     bool close();
     char* add(char* field, char* data);
+    char* add(char* param, int length);
     char* queryString();
     //char* url();
     void get();
     void post();
+    void post(char* params);
     void clear();
 
   private:
