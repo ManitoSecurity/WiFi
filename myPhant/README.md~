@@ -14,10 +14,12 @@ library to interface between CC3000 WiFi Chip and data.sparkfun.com
   * fix add()
 
   **Known Problems**
-  * somthing is wrong in the add method
-  * struggle with '&' character and might not 
+  * weird issues with the add methods (spews data out of Serial)
 
   **Versions**
+
+  *myPhant_v0_3*
+   * working still messy
 
   *myPhant_v0_2*
    * not working

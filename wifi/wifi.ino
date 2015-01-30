@@ -50,13 +50,13 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
 
 // Constants
-unsigned int ap_security = WLAN_SEC_WPA2; // Security of network
+unsigned int ap_security = WLAN_SEC_WEP; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
 
 char server[] = "data.sparkfun.com";      // sparkfun data
 char pub_key[] = "5JZO9K83dRU0KlA39EGZ";  // public key
 char pri_key[] = "7BMDzNyXeAf0Kl25JoW1";  // private key
-int waitTime= 300;                      // limit update interval
+int waitTime= 30000;                      // limit update interval
 
 // Global Variables
 char ap_ssid[33];     // SSID of network
@@ -66,6 +66,7 @@ ConnectionInfo connection_info;
 int digiIRout;        // reading from IR
 int curr_alarm;
 int prev_alarm;
+char postString[33];
 
 SFE_CC3000 wifi(CC3000_INT, CC3000_EN, CC3000_CS);
 Phant phant(server, pub_key, pri_key, wifi);
@@ -145,26 +146,38 @@ void lookupServerIP(){
 }
 
 void setDisarmPost(){
-  phant.add("armed","F");
-  phant.add("alert","F"); 
+  char string[] = "armed=F&alert=F";
+  int j = 0;
+  while(string[j] != '\0') {
+     postString[j] = string[j];
+     j++;
+  }
+
+  postString[j] = '\0';
 }
 
 void setArmPost(){
-  phant.add("armed","T"); //need both because we clear old data
-  phant.add("alert","F"); 
+  char string[] = "armed=T&alert=F"; 
+    int j = 0;
+  while(string[j] != '\0') {
+     postString[j] = string[j];
+     j++;
+  }
+
+  postString[j] = '\0';
 }
 
-void setAlertPost(){;
-  Serial.println(phant.add("&armed=F&alert=F", 16)); 
-  delay(300000); 
-  //Serial.println(phant.add("alert","T"));
+void setAlertPost(){
+  char string[] = "armed=T&alert=T";
+    int j = 0;
+  while(string[j] != '\0') {
+     postString[j] = string[j];
+     j++;
+  }
 
+  postString[j] = '\0';
 }
 
-void setShutUpPost(){
-  phant.add("armed","T");
-  phant.add("alert","F");
-}
 
 void updateServer(){  
   boolean connection = phant.connect();
@@ -174,7 +187,7 @@ void updateServer(){
     Serial.print(server);
     Serial.print("\n"); 
     //phant.clear();
-    phant.post("armed=F&alert=F");
+    phant.post(postString);
   } else {
     Serial.print('\n');
     Serial.print("Failed to connect to ");
@@ -231,12 +244,12 @@ void loop() {
       setAlertPost();
       curr_alarm = 2;
     } else {
-      setShutUpPost();
+      setArmPost();
       curr_alarm = 1;
     }
     
     if(curr_alarm != prev_alarm){
-     updateServer();
+      updateServer();
     }
   
 } // end loop

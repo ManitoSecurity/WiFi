@@ -13,19 +13,19 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   * will post to https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 
   **TO DO**
-  * resolve phant.add() issues
+  * resolve alarm problems
   * posting: establish TCP connection, send HTTP command from Phant object
   * make code pretty
   * incorporate BT
 
   **Known Problems**
   * trouble with WEP security- might have to send key as hex (see wlan.h in WiFi library's utility)
-  * currently cannot vary posted message
+  * flips alarm on and off every 30s
 
   **Versions**
 
   *wifi_v1_5*
-   * almost working; can post hard coded message to server
+   * almost working; posts to server but flips alarm on and off every 30s
    * problem occurs in phant.add
    * making it work with data.sparkfun.com
    * uses myPhant class (phant is sparkfun's name for their server system)

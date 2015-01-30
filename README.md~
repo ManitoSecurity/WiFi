@@ -20,15 +20,15 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   **Known Problems**
   * trouble with WEP security- might have to send key as hex (see wlan.h in WiFi library's utility)
-  * currently cannot vary posted message
+  * flips alarm on and off every 30s
 
   **Versions**
 
   *wifi_v1_5*
-   * not working- seems to dump memory to Serial at the end of setup()
+   * almost working; posts to server but flips alarm on and off every 30s
    * problem occurs in phant.add
    * making it work with data.sparkfun.com
-   * uses myPhant class (phant is sparkfun's name for thier server system)
+   * uses myPhant class (phant is sparkfun's name for their server system)
 
   *wifi_v1_4*
    * not working
