@@ -14,21 +14,21 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   **TO DO**
   * resolve phant.add() issues
-  * remove all use of arduino's useless String class
   * posting: establish TCP connection, send HTTP command from Phant object
   * make code pretty
   * incorporate BT
 
   **Known Problems**
   * trouble with WEP security- might have to send key as hex (see wlan.h in WiFi library's utility)
+  * currently cannot vary posted message
 
   **Versions**
 
   *wifi_v1_5*
-   * not working- seems to dump memory to Serial at the end of setup()
+   * almost working; can post hard coded message to server
    * problem occurs in phant.add
    * making it work with data.sparkfun.com
-   * uses myPhant class (phant is sparkfun's name for thier server system)
+   * uses myPhant class (phant is sparkfun's name for their server system)
 
   *wifi_v1_4*
    * not working

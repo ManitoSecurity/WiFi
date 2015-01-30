@@ -155,22 +155,10 @@ void setArmPost(){
 }
 
 void setAlertPost(){
-  Serial.print("\n"); 
-  Serial.print("Heyyy");
-  Serial.print("\n");
   
-  phant.add("armed","T");
-  Serial.print("\n");
-  Serial.print("made it");
-  Serial.print("\n");
-  Serial.print("\n");
-  Serial.print("\n");
-  
-  Serial.print(phant.add("alert","T"));
-   
-  Serial.print("\n"); 
-  Serial.print("YO");
-  Serial.print("\n");
+  phant.add("armed","T");  
+  phant.add("alert","T");
+
 }
 
 void setShutUpPost(){
@@ -225,13 +213,7 @@ void setup() {
   prev_alarm = 0;
   
   setAlertPost();
-  Serial.print("\n"); 
-  Serial.print("SUP");
-  Serial.print("\n");
   updateServer();  
-  Serial.print("\n"); 
-  Serial.print("DOG?");
-  Serial.print("\n");
 
   Serial.print("       Setup Complete      ");
   Serial.print("\n"); 
