@@ -204,18 +204,21 @@ void updateServer(){
 
 void checkServer(){ 
   char c;
-  boolean connection = phant.connect();
-  delay(100);
-  if(connection) {
+  
+  if(phant.connect()) {
+    phant.get();
     Serial.print("Getting data from ");
     Serial.print(server);
     Serial.print("\n"); 
-    phant.get();
     c = phant.recieve();
     while (c != '\0') {
       Serial.print(c);
       c = phant.recieve();
     }
+    if (c == '\0') {
+      Serial.println('XX');
+    }
+    
   } else {
     Serial.print('\n');
     Serial.print("Failed to connect to ");
