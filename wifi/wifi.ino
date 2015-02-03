@@ -87,7 +87,7 @@ void initCC3000(){
 
 void getWiFiInfo(){
  
-  Serial.setTimeout(1000);
+  Serial.setTimeout(10000);
   Serial.print("Enter SSID: ");
   Serial.readBytesUntil('\n',ap_ssid,33);
   delay(1000);
@@ -182,14 +182,28 @@ void setAlertPost(){
 
 
 void updateServer(){  
+
   boolean connection = phant.connect();
   delay(100);
   if(connection) {
+    Serial.print("Clearing data on ");
+    Serial.print(server);
+    Serial.print("\n");  
+    phant.makeEmpty();
+  } else {
+    Serial.print('\n');
+    Serial.print("Failed to connect to ");
+    Serial.print(server); 
+    Serial.print('\n');   
+  }
+  delay(100);
+  
+  connection = phant.connect();
+  delay(100);
+  if(connection) { 
     Serial.print("Posting to ");
     Serial.print(server);
     Serial.print("\n"); 
-    //phant.makeEmpty();
-    delay(100);
     phant.post(postString);
   } else {
     Serial.print('\n');
@@ -214,9 +228,6 @@ void checkServer(){
     while (c != '\0') {
       Serial.print(c);
       c = phant.recieve();
-    }
-    if (c == '\0') {
-      Serial.println('XX');
     }
     
   } else {
@@ -262,10 +273,6 @@ void setup() {
 
 
 void loop() {
-    char c;
-    
-    checkServer();
-    Serial.println("done yo");
      
     digiIRout = digitalRead(IRPin);
     prev_alarm = curr_alarm;
@@ -281,5 +288,7 @@ void loop() {
     if(curr_alarm != prev_alarm){
       updateServer();
     }
+    
+    checkServer();
   
 } // end loop
