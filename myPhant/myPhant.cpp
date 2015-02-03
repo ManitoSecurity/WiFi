@@ -112,10 +112,15 @@ void Phant::get()
 }
 
 char Phant::recieve(){
+  while(_client.available())
+    _client.read();  
+  return '\0';
+/*
   if ( _client.available() )
     return _client.read();
   else
     return '\0';
+*/
 }
 
 void Phant::post(char* params) 

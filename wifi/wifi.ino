@@ -203,10 +203,27 @@ void updateServer(){
 } //end updateServer
 
 void checkServer(){ 
-  Serial.print("Getting data from ");
-  Serial.print(server);
-  Serial.print("\n"); 
-  phant.get();
+  char c;
+  boolean connection = phant.connect();
+  delay(100);
+  if(connection) {
+    Serial.print("Getting data from ");
+    Serial.print(server);
+    Serial.print("\n"); 
+    phant.get();
+    c = phant.recieve();
+    while (c != '\0') {
+      Serial.print(c);
+      c = phant.recieve();
+    }
+  } else {
+    Serial.print('\n');
+    Serial.print("Failed to connect to ");
+    Serial.print(server); 
+    Serial.print('\n');   
+  }
+  
+
 }
 
 
@@ -245,13 +262,8 @@ void loop() {
     char c;
     
     checkServer();
-    /*
-    c = phant.recieve();
-    while (c != '\0') {
-      Serial.print(c);
-      c = phant.recieve();
-    }
-  */
+    Serial.println("done yo");
+     
     digiIRout = digitalRead(IRPin);
     prev_alarm = curr_alarm;
     
