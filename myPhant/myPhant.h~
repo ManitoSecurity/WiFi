@@ -26,9 +26,10 @@ class Phant {
     char* queryString();
     //char* url();
     void get();
+    void recieve();
     void post();
-    void post(char* param);
-    void clear();
+    void post(char* params);
+    void makeEmpty();
 
   private:
     char* _pub;

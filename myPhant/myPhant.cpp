@@ -111,6 +111,13 @@ void Phant::get()
 
 }
 
+char Phant::recieve(){
+  if ( _client.available() )
+    return _client.read();
+  else
+    return '\0';
+}
+
 void Phant::post(char* params) 
 {
 
@@ -133,7 +140,7 @@ void Phant::post(char* params)
 
 }
 
-void Phant::clear() 
+void Phant::makeEmpty() 
 {
 
   int _param_length;

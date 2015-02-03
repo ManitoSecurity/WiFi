@@ -73,6 +73,8 @@ Phant phant(server, pub_key, pri_key, wifi);
 
 
 void initCC3000(){
+  Serial.print("CC3000 initialization in progress...");
+  Serial.print("\n"); 
   if ( wifi.init() ) {
     Serial.print("CC3000 initialization complete");
     Serial.print("\n"); 
@@ -186,7 +188,8 @@ void updateServer(){
     Serial.print("Posting to ");
     Serial.print(server);
     Serial.print("\n"); 
-    //phant.clear();
+    //phant.makeEmpty();
+    delay(100);
     phant.post(postString);
   } else {
     Serial.print('\n');
@@ -199,7 +202,10 @@ void updateServer(){
   
 } //end updateServer
 
-void checkServer(){
+void checkServer(){ 
+  Serial.print("Getting data from ");
+  Serial.print(server);
+  Serial.print("\n"); 
   phant.get();
 }
 
@@ -221,10 +227,10 @@ void setup() {
   showConnectionInfo();
   lookupServerIP();
    
-  curr_alarm = 1;
+  curr_alarm = 0;
   prev_alarm = 0;
   
-  //setAlertPost();
+  setArmPost();
   updateServer();  
 
   Serial.print("       Setup Complete      ");
@@ -236,16 +242,25 @@ void setup() {
 
 
 void loop() {
-  
+    char c;
+    
+    checkServer();
+    /*
+    c = phant.recieve();
+    while (c != '\0') {
+      Serial.print(c);
+      c = phant.recieve();
+    }
+  */
     digiIRout = digitalRead(IRPin);
     prev_alarm = curr_alarm;
     
     if(digiIRout == LOW) { 
       setAlertPost();
-      curr_alarm = 2;
+      curr_alarm = 1;
     } else {
       setArmPost();
-      curr_alarm = 1;
+      curr_alarm = 0;
     }
     
     if(curr_alarm != prev_alarm){

@@ -9,10 +9,10 @@ library to interface between CC3000 WiFi Chip and data.sparkfun.com
 **wifi** 
 ----------------------------------------------------------------------------
   * sends HTTP messages to data.sparkfun.com
-  * 
+  * recieves replies too
 
   **TO DO**
-  * fix add()
+  * get reply
 
   **Known Problems**
   * weird issues with the add methods (spews data out of Serial)

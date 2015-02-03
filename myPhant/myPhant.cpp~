@@ -111,6 +111,13 @@ void Phant::get()
 
 }
 
+char Phant::recieve(){
+  if ( client.available() )
+    return client.read();
+  else
+    return '\0';
+}
+
 void Phant::post(char* params) 
 {
 
@@ -123,7 +130,8 @@ void Phant::post(char* params)
   _client.print("Phant-Private-Key: "); _client.println(_prv);
   _client.println("Connection: close");
   _client.println("Content-Type: application/x-www-form-urlencoded");
-  _client.print("Content-Length: "); _client.print(_param_length);
+  //_client.print("Content-Length: "); _client.print(_param_length);
+  _client.print("Content-Length: 15");
   _client.print("\n\n");
   _client.print(params);
 
@@ -132,7 +140,7 @@ void Phant::post(char* params)
 
 }
 
-void Phant::clear() 
+void Phant::makeEmpty() 
 {
 
   int _param_length;
