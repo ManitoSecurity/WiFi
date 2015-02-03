@@ -87,7 +87,7 @@ void initCC3000(){
 
 void getWiFiInfo(){
  
-  Serial.setTimeout(10000);
+  Serial.setTimeout(1000);
   Serial.print("Enter SSID: ");
   Serial.readBytesUntil('\n',ap_ssid,33);
   delay(1000);

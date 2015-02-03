@@ -53,10 +53,10 @@ Distributed as-is; no warranty is given.
 
 // Constants
 char ap_ssid[] = "Gonzaga Lite";                  // SSID of network
-char ap_password[] = PassWord_here;          // Password of network
+char ap_password[] = "l8 for dinner";          // Password of network
 unsigned int ap_security = WLAN_SEC_WEP; // Security of network
 unsigned int timeout = 60000;             // Milliseconds
-char server[] = "www.example.com";        // Remote host site
+char server[] = "data.sparkfun.com";        // Remote host site
 
 // Global Variables
 SFE_CC3000 wifi = SFE_CC3000(CC3000_INT, CC3000_EN, CC3000_CS);
@@ -114,6 +114,13 @@ void setup() {
     Serial.println("Error: Could not make a TCP connection");
   }
   
+  
+   client.print("GET /output/5JZO9K83dRU0KlA39EGZ"); 
+     client.println(".csv HTTP/1.1");
+  client.print("Host: data.sparkfun.com");
+  client.println("Connection: close");
+    client.println();
+ /* 
   // Make a HTTP GET request
   client.println("GET /index.html HTTP/1.1");
   client.print("Host: ");
@@ -121,6 +128,7 @@ void setup() {
   client.println("Connection: close");
   client.println();
   Serial.println();
+  */
 }
 
 void loop() {
@@ -129,6 +137,10 @@ void loop() {
   if ( client.available() ) {
     char c = client.read();
     Serial.print(c);
+  }
+  else
+  {
+    Serial.println("XX");
   }
   
   // If the server has disconnected, stop the client and wifi

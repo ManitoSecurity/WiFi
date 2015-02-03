@@ -108,7 +108,7 @@ void Phant::get()
      _client.println(".csv HTTP/1.1");
   _client.print("Host: "); _client.println(_host);
   _client.println("Connection: close");
-
+  _client.print("\n");
 }
 
 char Phant::recieve(){
@@ -151,5 +151,6 @@ void Phant::makeEmpty()
   _client.print("Host: "); _client.println(_host);
   _client.print("Phant-Private-Key: "); _client.println(_prv);
   _client.println("Connection: close");
+  _client.print("\n");
 
 }

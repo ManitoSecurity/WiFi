@@ -108,19 +108,16 @@ void Phant::get()
      _client.println(".csv HTTP/1.1");
   _client.print("Host: "); _client.println(_host);
   _client.println("Connection: close");
-
+  _client.print("\n");
 }
 
 char Phant::recieve(){
-  while(_client.available())
-    _client.read();  
-  return '\0';
-/*
+
   if ( _client.available() )
     return _client.read();
   else
     return '\0';
-*/
+
 }
 
 void Phant::post(char* params) 
