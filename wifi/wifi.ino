@@ -67,6 +67,7 @@ int digiIRout;        // reading from IR
 int curr_alarm;
 int prev_alarm;
 char postString[33];
+char phantReply[256];
 
 SFE_CC3000 wifi(CC3000_INT, CC3000_EN, CC3000_CS);
 Phant phant(server, pub_key, pri_key, wifi);
@@ -218,6 +219,8 @@ void updateServer(){
 
 void checkServer(){ 
   char c;
+  int i = 0;
+  int nl_cnt = 0;
   
   if(phant.connect()) {
     phant.get();
@@ -225,10 +228,24 @@ void checkServer(){
     Serial.print(server);
     Serial.print("\n"); 
     c = phant.recieve();
+    delay(500);
     while (c != '\0') {
-      Serial.print(c);
+
+      if (nl_cnt == 15) {
+         phantReply[i] = c; 
+         i++;
+      } else if (c = '\n') {
+         nl_cnt++;
+      }  
+      
       c = phant.recieve();
     }
+    
+    phantReply[i] = '\0';
+    
+    Serial.print("Phant data: ");
+    Serial.print(phantReply); 
+    Serial.print("\n"); 
     
   } else {
     Serial.print('\n');
