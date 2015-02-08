@@ -14,7 +14,6 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   **TO DO**
   * resolve alarm problems
-  * posting: establish TCP connection, send HTTP command from Phant object
   * make code pretty
   * incorporate BT
 
@@ -24,9 +23,13 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   **Versions**
 
+  *wifi_v1_6*
+   * almost working; getting and parsing data from sparkfun
+   * getting from sparkfun seems to disrupt the cc3000 initialization process
+   * uses myPhant class (phant is sparkfun's name for their server system)
+
   *wifi_v1_5*
    * almost working; posts to server but flips alarm on and off every 30s
-   * problem occurs in phant.add
    * making it work with data.sparkfun.com
    * uses myPhant class (phant is sparkfun's name for their server system)
 
