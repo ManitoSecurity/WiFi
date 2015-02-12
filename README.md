@@ -23,6 +23,13 @@ CC3000 info here: https://www.sparkfun.com/products/12072
 
   **Versions**
 
+  *wifi_v2_0*
+   * switching from arduino IDE to visual studio with the add on:
+   * http://www.visualmicro.com/
+   * almost working; getting and parsing data from sparkfun
+   * getting from sparkfun seems no longer disrupts the cc3000 initialization process
+   * uses myPhant class (phant is sparkfun's name for their server system)
+
   *wifi_v1_6*
    * almost working; getting and parsing data from sparkfun
    * getting from sparkfun seems to disrupt the cc3000 initialization process

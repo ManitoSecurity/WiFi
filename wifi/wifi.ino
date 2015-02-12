@@ -1,5 +1,5 @@
 /****************************************************************
-wifi_v1_3.ino
+wifi.ino
 Manito Security Solutions
 Brian Gravelle
 Jan 8, 2015
@@ -67,7 +67,7 @@ int digiIRout;        // reading from IR
 int curr_alarm;
 int prev_alarm;
 char postString[33];
-char phantReply[256];
+char phantReply[64];
 
 SFE_CC3000 wifi(CC3000_INT, CC3000_EN, CC3000_CS);
 Phant phant(server, pub_key, pri_key, wifi);
@@ -227,12 +227,15 @@ void checkServer(){
     phant.get();
     Serial.print("Getting data from ");
     Serial.print(server);
-    Serial.print('\n"'); 
+    Serial.print('\n');
+    Serial.print('\n'); 
     c = phant.recieve();
     delay(500);
     
     while (c != '\0') {
-
+      Serial.print("loopy ");
+      Serial.print(i);
+      Serial.print("\n");
       if (nl_cnt == 15) {
          phantReply[i] = c; 
          i++;
