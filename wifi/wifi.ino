@@ -64,8 +64,7 @@ char ap_password[33]; // Password of network
 IPAddress remote_ip;
 ConnectionInfo connection_info;
 int digiIRout;        // reading from IR
-int curr_alarm;
-int prev_alarm;
+boolean armed, alarmed, state_change;
 char postString[33];
 char phantReply[64];
 
@@ -74,8 +73,7 @@ Phant phant(server, pub_key, pri_key, wifi);
 
 
 void initCC3000(){
-  Serial.print("CC3000 initialization in progress...");
-  Serial.print('\n'); 
+
   if ( wifi.init() ) {
     Serial.print("CC3000 initialization complete");
     Serial.print('\n'); 
@@ -207,6 +205,7 @@ void updateServer(){
     Serial.print(server);
     Serial.print('\n'); 
     phant.post(postString);
+	state_change = false;
   } else {
     Serial.print('\n');
     Serial.print("Failed to connect to ");
@@ -230,23 +229,21 @@ void checkServer(){
     Serial.print('\n');
     Serial.print('\n'); 
     c = phant.recieve();
-    delay(500);
+    delay(100);
     
     while (c != '\0') {
 	
-      if (nl_cnt == 15) {
+      if ( (nl_cnt == 15) && (i < 63) ) {
          phantReply[i] = c; 
          i++;
-      } else
-		if (c == '\n') {
+      } else {
+		if (c == '\n') 
          nl_cnt++;
       }  
       
       c = phant.recieve();
-
     }
-
-    
+	    
     Serial.print("Phant data: ");
     Serial.print(phantReply); 
     Serial.print("\n"); 
@@ -260,6 +257,19 @@ void checkServer(){
   
 }
 
+void syncToServer(){
+
+	if( phantReply[0] == 'T') 
+		alarmed = true;
+	else  
+		alarmed = false;
+
+    if( phantReply[2] == 'T') 
+		armed = true;
+	else 
+		armed = false;
+
+}
 
 void setup() {
   
@@ -278,9 +288,9 @@ void setup() {
   showConnectionInfo();
   lookupServerIP();
    
-  curr_alarm = 0;
-  prev_alarm = 0;
-  
+  state_change = true;
+  armed = true; alarmed = false;
+
   setArmPost();
   updateServer();  
 
@@ -295,20 +305,25 @@ void setup() {
 void loop() {
      
     digiIRout = digitalRead(IRPin);
-    prev_alarm = curr_alarm;
     
-    if(digiIRout == LOW) { 
-      setAlertPost();
-      curr_alarm = 1;
-    } else {
-      setArmPost();
-      curr_alarm = 0;
-    }
-    
-    if(curr_alarm != prev_alarm){
-      updateServer();
-    }
-    
+	if ( armed ) {
+		if(digiIRout == LOW) { 
+		  setAlertPost();
+		  state_change = !alarmed; //if not alarming you changed!
+		  alarmed = true;
+		} else {
+		  setArmPost();
+		  state_change = alarmed;
+		  alarmed = true;
+		}
+	
+	}
+
+	if( state_change ){
+       updateServer();
+	}
+
     checkServer();
+	syncToServer();
   
 } // end loop
