@@ -56,7 +56,7 @@ unsigned int timeout = 60000;             // Milliseconds
 char server[] = "data.sparkfun.com";      // sparkfun data
 char pub_key[] = "5JZO9K83dRU0KlA39EGZ";  // public key
 char pri_key[] = "7BMDzNyXeAf0Kl25JoW1";  // private key
-int waitTime= 10000;                      // limit update interval
+int waitTime= 30000;                      // limit update interval
 
 // Global Variables
 char ap_ssid[33];     // SSID of network
@@ -241,6 +241,7 @@ void checkServer(){
          nl_cnt++;
       }  
       
+	  Serial.print(c);
       c = phant.recieve();
     }
 	    
@@ -303,7 +304,10 @@ void setup() {
 
 
 void loop() {
-     
+    
+	int loop_cnt;
+
+	delay(100);
     digiIRout = digitalRead(IRPin);
     
 	if ( armed ) {
@@ -314,7 +318,7 @@ void loop() {
 		} else {
 		  setArmPost();
 		  state_change = alarmed;
-		  alarmed = true;
+		  alarmed = false;
 		}
 	
 	}
@@ -323,7 +327,10 @@ void loop() {
        updateServer();
 	}
 
-    checkServer();
-	syncToServer();
+	if(loop_cnt >= 100) {
+       checkServer();
+	   syncToServer();
+	   loop_cnt %= 100; 
+	}
   
 } // end loop
