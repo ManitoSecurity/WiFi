@@ -205,7 +205,6 @@ void updateServer(){
     Serial.print(server);
     Serial.print('\n'); 
     phant.post(postString);
-	state_change = false;
   } else {
     Serial.print('\n');
     Serial.print("Failed to connect to ");
@@ -241,7 +240,7 @@ void checkServer(){
          nl_cnt++;
       }  
       
-	  Serial.print(c);
+	  //Serial.print(c); useful for debug
       c = phant.recieve();
     }
 	    
@@ -258,18 +257,18 @@ void checkServer(){
   
 }
 
-void syncToServer(){
+void syncArmToServer(){
+    if( phantReply[0] == 'F') 
+		armed = false;
+	else 
+		armed = true;
+}
 
-	if( phantReply[0] == 'T') 
+void syncAlertToServer(){
+	if( phantReply[2] == 'T') 
 		alarmed = true;
 	else  
 		alarmed = false;
-
-    if( phantReply[2] == 'T') 
-		armed = true;
-	else 
-		armed = false;
-
 }
 
 void setup() {
@@ -293,8 +292,9 @@ void setup() {
   armed = true; alarmed = false;
 
   setArmPost();
-  updateServer();  
-
+  updateServer();
+  checkServer();
+  
   Serial.print("       Setup Complete      ");
   Serial.print('\n'); 
   Serial.print("---------------------------");
@@ -305,9 +305,7 @@ void setup() {
 
 void loop() {
     
-	int loop_cnt;
-
-	delay(100);
+	delay(30000);
     digiIRout = digitalRead(IRPin);
     
 	if ( armed ) {
@@ -323,14 +321,19 @@ void loop() {
 	
 	}
 
-	if( state_change ){
-       updateServer();
-	}
-
-	if(loop_cnt >= 100) {
-       checkServer();
-	   syncToServer();
-	   loop_cnt %= 100; 
+	if( state_change ) {
+		
+	   checkServer();
+	   syncArmToServer();
+       if( armed ) {
+	      updateServer();
+	   } else {
+		   syncAlertToServer();
+		   Serial.println("disarmed");
+		   state_change = false;
+	   }
+	   
+	    state_change = false;
 	}
   
 } // end loop
