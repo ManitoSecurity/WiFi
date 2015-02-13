@@ -56,7 +56,7 @@ unsigned int timeout = 60000;             // Milliseconds
 char server[] = "data.sparkfun.com";      // sparkfun data
 char pub_key[] = "5JZO9K83dRU0KlA39EGZ";  // public key
 char pri_key[] = "7BMDzNyXeAf0Kl25JoW1";  // private key
-int waitTime= 30000;                      // limit update interval
+int waitTime= 10000;                      // limit update interval
 
 // Global Variables
 char ap_ssid[33];     // SSID of network
@@ -233,20 +233,19 @@ void checkServer(){
     delay(500);
     
     while (c != '\0') {
-      Serial.print("loopy ");
-      Serial.print(i);
-      Serial.print("\n");
+	
       if (nl_cnt == 15) {
          phantReply[i] = c; 
          i++;
-      } else if (c = '\n') {
+      } else
+		if (c == '\n') {
          nl_cnt++;
       }  
       
       c = phant.recieve();
+
     }
-    
-    phantReply[i] = '\0';
+
     
     Serial.print("Phant data: ");
     Serial.print(phantReply); 
