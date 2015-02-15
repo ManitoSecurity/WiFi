@@ -13,15 +13,19 @@ CC3000 info here: https://www.sparkfun.com/products/12072
   * will post to https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 
   **TO DO**
-  * resolve alarm problems
+  * fix IR- doesnot give proper input
   * make code pretty
   * incorporate BT
 
   **Known Problems**
   * trouble with WEP security- might have to send key as hex (see wlan.h in WiFi library's utility)
-  * flips alarm on and off every 30s
+  * flips alarm on and off every 30s- IR sensor issue (could be soft or hard problem)
 
   **Versions**
+
+  *wifi_v2_1*
+   * successful interaction with data.sparkfun .com
+   * trouble working with IR sensor
 
   *wifi_v2_0*
    * switching from arduino IDE to visual studio with the add on:

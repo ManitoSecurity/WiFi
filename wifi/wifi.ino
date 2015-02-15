@@ -44,7 +44,8 @@ url  https://data.sparkfun.com/streams/5JZO9K83dRU0KlA39EGZ
 #define CC3000_INT      2   // Needs to be an interrupt pin (D2/D3)
 #define CC3000_EN       7   // Can be any digital pin
 #define CC3000_CS       10  // Preferred is pin 10 on Uno
-#define IRPin           8 
+#define IRPin           3 
+#define IRDummy         6 
 
 // Connection info data lengths
 #define IP_ADDR_LEN     4   // Length of IP address in bytes
@@ -184,21 +185,21 @@ void setAlertPost(){
 void updateServer(){  
 
   boolean connection = phant.connect();
-  delay(100);
-  if(connection) {
-    Serial.print("Clearing data on ");
-    Serial.print(server);
-    Serial.print('\n');  
-    phant.makeEmpty();
-  } else {
-    Serial.print('\n');
-    Serial.print("Failed to connect to ");
-    Serial.print(server); 
-    Serial.print('\n');   
-  }
-  delay(100);
-  
-  connection = phant.connect();
+  //delay(100);
+  //if(connection) {
+  //  Serial.print("Clearing data on ");
+  //  Serial.print(server);
+  //  Serial.print('\n');  
+  //  phant.makeEmpty();
+  //} else {
+  //  Serial.print('\n');
+  //  Serial.print("Failed to connect to ");
+  //  Serial.print(server); 
+  //  Serial.print('\n');   
+  //}
+  //delay(100);
+  //
+  //connection = phant.connect();
   delay(100);
   if(connection) { 
     Serial.print("Posting to ");
@@ -232,7 +233,7 @@ void checkServer(){
     
     while (c != '\0') {
 	
-      if ( (nl_cnt == 15) && (i < 63) ) {
+      if ( (nl_cnt == 15) && (i < 62) ) {
          phantReply[i] = c; 
          i++;
       } else {
@@ -258,14 +259,14 @@ void checkServer(){
 }
 
 void syncArmToServer(){
-    if( phantReply[0] == 'F') 
+    if( phantReply[2] == 'F') 
 		armed = false;
 	else 
 		armed = true;
 }
 
 void syncAlertToServer(){
-	if( phantReply[2] == 'T') 
+	if( phantReply[0] == 'T') 
 		alarmed = true;
 	else  
 		alarmed = false;
@@ -281,6 +282,8 @@ void setup() {
   Serial.print("---------------------------\n");
   
   pinMode(IRPin, INPUT);
+  pinMode(IRDummy, OUTPUT);
+  digitalWrite(IRDummy, HIGH);
 
   initCC3000();  
   getWiFiInfo(); 
@@ -305,7 +308,7 @@ void setup() {
 
 void loop() {
     
-	delay(30000);
+	//delay(30000);
     digiIRout = digitalRead(IRPin);
     
 	if ( armed ) {
@@ -325,10 +328,12 @@ void loop() {
 		
 	   checkServer();
 	   syncArmToServer();
+	   delay(100);
        if( armed ) {
 	      updateServer();
 	   } else {
 		   syncAlertToServer();
+		   delay(100);
 		   Serial.println("disarmed");
 		   state_change = false;
 	   }
