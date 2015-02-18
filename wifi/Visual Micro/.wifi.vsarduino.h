@@ -80,5 +80,12 @@ extern "C" void __cxa_pure_virtual() {;}
 #define portInputRegister(P)
 #define portModeRegister(P)
 #include <wifi.ino>
+#include <phant_driver.c>
+#include <phant_driver.cpp>
+#include <phant_driver.cpp, phant_driver.h.c>
+#include <phant_driver.cpp, phant_driver.h.h>
+#include <phant_driver.h>
+#include <phant_driver.h.c>
+#include <phant_driver.h.h>
 #include <resource.h>
 #endif
